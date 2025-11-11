@@ -1,28 +1,27 @@
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-function App() {
-  const [count, setCount] = useState(0)
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000'
+
+export default function App() {
+  const [apiStatus, setApiStatus] = useState('Loading...')
+
+  useEffect(() => {
+    fetch(`${BACKEND_URL}/health`)
+      .then(r => r.json())
+      .then(data => setApiStatus(`Backend: ${data.status}`))
+      .catch(() => setApiStatus('Backend: unreachable'))
+  }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
-          Vibe Coding Platform
-        </h1>
-        <p className="text-gray-600 mb-6">
-          Your AI-powered development environment
-        </p>
-        <div className="text-center">
-          <button
-            onClick={() => setCount(count + 1)}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-          >
-            Count is {count}
-          </button>
-        </div>
+    <div style={{
+      minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+      fontFamily: 'system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, sans-serif'
+    }}>
+      <div style={{textAlign:'center'}}>
+        <h1 style={{fontSize: 32, fontWeight: 700, marginBottom: 8}}>Vite + React starter</h1>
+        <p style={{opacity: 0.8, marginBottom: 16}}>{apiStatus}</p>
+        <p>If you still see a white screen, try refreshing the page.</p>
       </div>
     </div>
   )
 }
-
-export default App
